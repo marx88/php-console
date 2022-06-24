@@ -1,0 +1,21 @@
+{
+    "name": "marx/console",
+    "description": "console tool based on php",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Marx\\Console\\": "src/",
+            "Marx\\Console\\Test\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Marx",
+            "email": "marx_88@126.com"
+        }
+    ],
+    "require": {
+        "php": "~7.4.3||~8.1.0"
+    }
+}

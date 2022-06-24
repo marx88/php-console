@@ -1,0 +1,11 @@
+<?php
+
+namespace Marx\Console\Test;
+
+require_once __DIR__.'/../vendor/autoload.php';
+
+use Marx\Console\Console;
+
+$console = new Console();
+$console->addCommand(new SomeCommand());
+$console->run();
