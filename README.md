@@ -4,7 +4,7 @@
 
 ## 使用
 
-参考`./test/cmd`和`./test/SomeCommand.php`
+参考`./tests/cmd`和`./tests/SomeCommand.php`
 
 ## 功能
 
