@@ -99,9 +99,12 @@ class Parser
     /**
      * 添加option.
      */
-    protected function addOption(ArgvItem $argvItem)
+    protected function addOption(string &$key, ?string $val)
     {
-        $this->optionArr[$argvItem->getKey()] = $argvItem->getValue();
+        $this->optionArr[$key] = $val ?? '';
+        if (!is_null($val)) {
+            $key = null;
+        }
     }
 
     /**
@@ -110,31 +113,23 @@ class Parser
     protected function parseArgOpt(array &$argv)
     {
         $len = count($argv);
-        $argvItem = new ArgvItem();
+        $key = null;
         for ($index = $this->hasCommandName() ? 2 : 1; $index < $len; ++$index) {
             $opt = $argv[$index];
 
             // 匹配长名称
-            $this->matchLongOption($opt, $argvItem);
-            if ($argvItem->isMatched()) {
-                $this->addOption($argvItem);
-
+            if ($this->addLongOption($opt, $key)) {
                 continue;
             }
 
             // 匹配短名称
-            $this->matchShortOption($opt, $argvItem);
-            if ($argvItem->isMatched()) {
-                $this->addOption($argvItem);
-
+            if ($this->addShortOption($opt, $key)) {
                 continue;
             }
 
             // 前一个匹配到key 但未设置value
-            if ($argvItem->isFill()) {
-                $argvItem->setValue($opt);
-                $this->addOption($argvItem);
-                $argvItem->reset();
+            if (!is_null($key)) {
+                $this->addOption($key, $opt);
 
                 continue;
             }
@@ -143,25 +138,29 @@ class Parser
         }
     }
 
-    private function matchLongOption(string $opt, ArgvItem $argvItem): void
+    private function addLongOption(string $opt, ?string &$key): bool
     {
-        $argvItem->setMatched(false);
         $longOptionRegexp = '/^--(?<key>[^=]+)(=(?<val>.*))?$/';
-        if (preg_match($longOptionRegexp, $opt, $matches)) {
-            $argvItem->setMatched(true);
-            $argvItem->setKey('--'.$matches['key']);
-            $argvItem->setValue($matches['val'] ?? '');
+        if (!preg_match($longOptionRegexp, $opt, $matches)) {
+            return false;
         }
+
+        $key = '--'.$matches['key'];
+        $this->addOption($key, $matches['val'] ?? null);
+
+        return true;
     }
 
-    private function matchShortOption(string $opt, ArgvItem $argvItem): void
+    private function addShortOption(string $opt, ?string &$key): bool
     {
-        $argvItem->setMatched(false);
         $shortOptionRegexp = '/^-(?<key>[^=])(=(?<val>.*))?$/';
-        if (preg_match($shortOptionRegexp, $opt, $matches)) {
-            $argvItem->setMatched(true);
-            $argvItem->setKey('-'.$matches['key']);
-            $argvItem->setValue($matches['val'] ?? '');
+        if (!preg_match($shortOptionRegexp, $opt, $matches)) {
+            return false;
         }
+
+        $key = '-'.$matches['key'];
+        $this->addOption($key, $matches['val'] ?? null);
+
+        return true;
     }
 }
