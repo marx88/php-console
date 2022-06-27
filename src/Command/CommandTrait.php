@@ -9,6 +9,10 @@ use Marx\Console\Output\Output;
 
 trait CommandTrait
 {
+    protected Input $input;
+
+    protected Output $output;
+
     /** @var Argument[] */
     private array $argumentArr = [];
 
@@ -22,7 +26,16 @@ trait CommandTrait
     /**
      * {@inheritDoc}
      */
-    abstract public function execute(Input $input, Output $output): void;
+    abstract public function execute(): void;
+
+    /**
+     * 初始化输入输出对象.
+     */
+    final public function initInputOutput(Input $input, Output $output): void
+    {
+        $this->input = $input;
+        $this->output = $output;
+    }
 
     /**
      * 获取名称.

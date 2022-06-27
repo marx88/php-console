@@ -10,9 +10,14 @@ use Marx\Console\Output\Output;
 interface CommandInterface
 {
     /**
+     * 初始化输入输出对象.
+     */
+    public function initInputOutput(Input $input, Output $output): void;
+
+    /**
      * 执行命令.
      */
-    public function execute(Input $input, Output $output): void;
+    public function execute(): void;
 
     /**
      * 获取名称.

@@ -44,6 +44,16 @@ class Input implements InputInterface
     }
 
     /**
+     * 以数组形式获取Argument.
+     */
+    public function getArgumentAsArray(string $name, string $separator = ','): ?array
+    {
+        $argument = $this->getArgument($name);
+
+        return $this->stringToArray($argument, $separator);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getOption(string $longName): ?string
@@ -53,6 +63,16 @@ class Input implements InputInterface
         }
 
         return $this->optionArr[$longName];
+    }
+
+    /**
+     * 以数组形式获取Option.
+     */
+    public function getOptionAsArray(string $name, string $separator = ','): ?array
+    {
+        $option = $this->getOption($name);
+
+        return $this->stringToArray($option, $separator);
     }
 
     /**
@@ -71,6 +91,37 @@ class Input implements InputInterface
         }
 
         return trim($input);
+    }
+
+    /**
+     * 以数组形式获取Answer.
+     */
+    public function readAnswerAsArray(string $separator = ','): ?array
+    {
+        $answer = $this->readAnswer();
+
+        return $this->stringToArray($answer, $separator);
+    }
+
+    /**
+     * 字符串转数组.
+     */
+    private function &stringToArray(?string &$str, string $separator): ?array
+    {
+        if (is_null($str)) {
+            return null;
+        }
+
+        $arr = [];
+        if ('' === trim($str)) {
+            return [];
+        }
+
+        foreach (explode($separator, $str) as $item) {
+            $arr[] = trim($item);
+        }
+
+        return $arr;
     }
 
     /**

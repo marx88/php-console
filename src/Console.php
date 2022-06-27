@@ -75,11 +75,12 @@ class Console
             return $this->showCommandHelp($command);
         }
 
-        // 设置命令参数
+        // 设置命令参数 及 输入输出对象
         $input = $this->getInput($command);
+        $command->initInputOutput($input, $this->output);
 
         // 执行命令
-        $command->execute($input, $this->output);
+        $command->execute();
     }
 
     private function listCommands()
@@ -112,7 +113,12 @@ class Console
 
     private function showCommandHelp(CommandInterface $command)
     {
-        $this->output->write('Command "'.Color::yellow($command->getName()).'",'.$command->getDesc());
+        $outputContent = [];
+        $outputContent[] = 'Command "'.Color::yellow($command->getName());
+        if ($command->getDesc()) {
+            $outputContent[] = $command->getDesc();
+        }
+        $this->output->write(implode(',', $outputContent));
         $this->output->write('');
 
         $maxLen = 0;
@@ -127,7 +133,14 @@ class Console
             $this->output->write(Color::yellow('Arguments:'));
             foreach ($command->getArgumentArr() as $argument) {
                 $name = str_pad($argument->getName(), $maxLen);
-                $this->output->write(Color::green('  '.$name).$argument->getDesc());
+                $outputContent = [];
+                if ($argument->isRequire()) {
+                    $outputContent[] = 'require';
+                }
+                if ($argument->getDesc()) {
+                    $outputContent[] = $argument->getDesc();
+                }
+                $this->output->write(Color::green('  '.$name).implode(',', $outputContent));
             }
             $this->output->write('');
         }
@@ -150,7 +163,14 @@ class Console
                     $shortName = '-'.$shortName.',';
                 }
                 $name = str_pad($shortName.' --'.$option->getLongName(), $maxLen);
-                $this->output->write(Color::green('  '.$name).$option->getDesc());
+                $outputContent = [];
+                if ($option->isRequire()) {
+                    $outputContent[] = 'require';
+                }
+                if ($option->getDesc()) {
+                    $outputContent[] = $option->getDesc();
+                }
+                $this->output->write(Color::green('  '.$name).implode(',', $outputContent));
             }
             $this->output->write('');
         }

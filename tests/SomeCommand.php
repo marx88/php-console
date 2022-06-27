@@ -6,8 +6,6 @@ namespace Marx\Console\Test;
 
 use Marx\Console\Color;
 use Marx\Console\Command\AbstractCommand;
-use Marx\Console\Input\Input;
-use Marx\Console\Output\Output;
 
 /**
  * SomeCommand.
@@ -21,14 +19,18 @@ class SomeCommand extends AbstractCommand
         $this->addArgument('one', true, 'one argument');
         $this->addArgument('two', false, 'two argument');
         $this->addOption('three', 't', true, 'option three');
-        $this->addOption('four', '');
+        $this->addOption('four', '', false, 'accept array');
     }
 
-    public function execute(Input $input, Output $output): void
+    public function execute(): void
     {
-        $output->write(Color::cyan('your argument one:').$input->getArgument('one'));
-        $output->write(Color::blue('your argument two:').$input->getArgument('two'));
-        $output->write(Color::purple('your option three:').$input->getOption('three'));
-        $output->write(Color::grey('your option four:').$input->getOption('four'));
+        // 测试脚本:php tests/cmd some the_one -t=the_three --four the_four the_two
+        $this->output->write(Color::cyan('your argument one:').$this->input->getArgument('one'));
+        $this->output->write(Color::blue('your argument two:').$this->input->getArgument('two'));
+        $this->output->write(Color::purple('your option three:').$this->input->getOption('three'));
+        $this->output->writeLn(Color::grey('your option four:'), $this->input->getOptionAsArray('four'));
+
+        $this->output->askQuestion(Color::yellow('input five argv'));
+        $this->output->writeLn(Color::green('your five argv is:'), $this->input->readAnswerAsArray());
     }
 }
