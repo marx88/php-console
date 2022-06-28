@@ -20,7 +20,7 @@ class Color
     /**
      * 红色 0=不高亮 1=高亮.
      */
-    public static function red(string $text, int $light = 1): string
+    public static function red(string $text, int $light = 0): string
     {
         return static::fmt(__FUNCTION__, $text, $light);
     }
@@ -28,7 +28,7 @@ class Color
     /**
      * 绿色 0=不高亮 1=高亮.
      */
-    public static function green(string $text, int $light = 1): string
+    public static function green(string $text, int $light = 0): string
     {
         return static::fmt(__FUNCTION__, $text, $light);
     }
@@ -36,7 +36,7 @@ class Color
     /**
      * 黄色 0=不高亮 1=高亮.
      */
-    public static function yellow(string $text, int $light = 1): string
+    public static function yellow(string $text, int $light = 0): string
     {
         return static::fmt(__FUNCTION__, $text, $light);
     }
@@ -44,7 +44,7 @@ class Color
     /**
      * 蓝色 0=不高亮 1=高亮.
      */
-    public static function blue(string $text, int $light = 1): string
+    public static function blue(string $text, int $light = 0): string
     {
         return static::fmt(__FUNCTION__, $text, $light);
     }
@@ -52,7 +52,7 @@ class Color
     /**
      * 紫色 0=不高亮 1=高亮.
      */
-    public static function purple(string $text, int $light = 1): string
+    public static function purple(string $text, int $light = 0): string
     {
         return static::fmt(__FUNCTION__, $text, $light);
     }
@@ -60,7 +60,7 @@ class Color
     /**
      * 青色 0=不高亮 1=高亮.
      */
-    public static function cyan(string $text, int $light = 1): string
+    public static function cyan(string $text, int $light = 0): string
     {
         return static::fmt(__FUNCTION__, $text, $light);
     }
@@ -68,14 +68,14 @@ class Color
     /**
      * 白色 0=不高亮 1=高亮.
      */
-    public static function white(string $text, int $light = 1): string
+    public static function white(string $text, int $light = 0): string
     {
         return static::fmt(__FUNCTION__, $text, $light);
     }
 
     private static function fmt(string $color, string $text, int $light): string
     {
-        if (0 !== $light) {
+        if (!in_array($light, [0, 1], true)) {
             $light = 1;
         }
         $map = [
