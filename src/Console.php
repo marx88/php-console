@@ -114,7 +114,7 @@ class Console
     private function showCommandHelp(CommandInterface $command)
     {
         $outputContent = [];
-        $outputContent[] = 'Command "'.Color::yellow($command->getName());
+        $outputContent[] = 'Command "'.Color::yellow($command->getName()).'"';
         if ($command->getDesc()) {
             $outputContent[] = $command->getDesc();
         }
